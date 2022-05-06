@@ -15,7 +15,7 @@ namespace Scripts.Demo
     /// <summary>
     /// Demo built in 20220506
     /// </summary>
-    public class HoverComponent : MonoBehaviour
+    public class BaseUIUnit : MonoBehaviour
     {
         public class HoverETrigger : EventTrigger
         {
@@ -71,30 +71,35 @@ namespace Scripts.Demo
         private SelectETrigger _selectEventTrigger;
         private Image _image;
 
-        [SerializeField] // for debug
+        [SerializeField]
         private bool _hovered;
         public bool Hovered { get => _hovered; }
         private bool _selected;
         public bool Selected { get => _selected; }
 
-        public void Click()
+        public void MountClickTask(SelectETrigger.clickDelegate clickTodo)
         {
-            print("Clicked!"+gameObject.name);
+            _selectEventTrigger.clickTodo = new SelectETrigger.clickDelegate(clickTodo);
         }
 
-        private void Start()
+        private void Awake()
         {
             this._selectEventTrigger = gameObject.AddComponent<SelectETrigger>();
-            _selectEventTrigger.clickTodo = new SelectETrigger.clickDelegate(Click);
+
             this._hoverEventTrigger = gameObject.AddComponent<HoverETrigger>();
             if (gameObject.GetComponent<Image>())
                 _image = gameObject.GetComponent<Image>();
             else
-                throw new UnityException("Need to append an UI.Image Component to the GameObject named <"+gameObject.name+">"); // Relax, just testing this.
+                throw new UnityException("Need to append an UI.Image Component to the GameObject named <" + gameObject.name + ">"); // Relax, just testing this.
 
             //data setting
             //vo_ScalingEye_target = new Vector2(1.2f, 1.2f);
             //vo_ScalingEye_lerpVar = 0.1f;
+        }
+
+        private void Start()
+        {
+
         }
 
         void Update()
